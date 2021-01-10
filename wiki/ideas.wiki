@@ -1,0 +1,14 @@
+= Trait ideas=
+  * Racism
+  * Loner
+  * Getting run off by a larger disagreeing group
+  * Influence and get influenced by others
+  * Leadership
+  * Have a home
+  * Has a business/job
+
+
+= Storytelling =
+  Randomly pick a blob to follow and generate a live story based on its actions.
+  If the story sucks, press a button and follow a new one.
+  If you like it, save it to a list of bookmarked Specks to follow again later.
