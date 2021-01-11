@@ -62,6 +62,12 @@
     - For very large (10k-100k specks), possibly realtime, simulations
     - Should give the feeling of a far-off top down view of a large city
 
+  * Voronoi
+    - Could make for a nicer fill of the space than blobs.
+    - Might make it too abstract, if the interst is in following the develoment
+      of the simulation.
+    
+    
   * Metablobs
     - Beautiful
     - Slows as balls
