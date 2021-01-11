@@ -1,6 +1,6 @@
 use macroquad::prelude::*;
 
-const SPECK_COUNT: i32 = 1000;
+const SPECK_COUNT: i32 = 100;
 const SPECK_SIZE: f32 = 20.0;
 const BACKGROUND_COLOR: Color = Color::new(49.0 / 256.0, 153.0 / 256.0, 158.0 / 256.0, 1.0);
 
@@ -31,13 +31,7 @@ async fn main() {
       .iter()
       .map(|speck| {
         draw_circle(speck.pos.x, speck.pos.y, SPECK_SIZE, speck.color);
-        let neighbours: Vec<&Speck> = specks
-          .iter()
-          .filter(|other| {
-            let d2 = other.pos.distance_squared(speck.pos);
-            d2 < neighbour_distance * neighbour_distance && speck.id != other.id
-          })
-          .collect();
+        let neighbours = get_neighbours(neighbour_distance, speck, &specks);
 
         update_speck(speck, neighbours)
       })
@@ -46,6 +40,16 @@ async fn main() {
     specks = new_specks;
     next_frame().await
   }
+}
+
+fn get_neighbours<'a>(distance: f32, speck: &Speck, others: &'a [Speck]) -> Vec<&'a Speck> {
+  others
+    .iter()
+    .filter(|other| {
+      let d2 = other.pos.distance_squared(speck.pos);
+      d2 < distance * distance && speck.id != other.id
+    })
+    .collect()
 }
 
 fn update_speck(old_speck: &Speck, neighbours: Vec<&Speck>) -> Speck {
