@@ -6,9 +6,63 @@
   * Leadership
   * Have a home
   * Has a business/job
+  * Friends, or other relations. Each Speck has a list of others it knows about.
 
 
 = Storytelling =
-  Randomly pick a blob to follow and generate a live story based on its actions.
+  Randomly pick a speck to follow and generate a live story based on its actions.
   If the story sucks, press a button and follow a new one.
   If you like it, save it to a list of bookmarked Specks to follow again later.
+
+
+= Items =
+  * Can be produced by specks
+  * Somethiung can be made special by a Speck making it special, through keeping
+    it a long time, getting it in trade from someone special, lying about it
+    being special when trading to someone else, using it in some significant
+    way...
+
+
+= Locations =
+  * Certain places can become special
+  * Someone can build something
+  * Ruins of old buildings can be discovered
+    - Building previously constructed by Specks at an earlier time, that has
+      broken down and been forgotten.
+
+
+= Economy =
+  * Each Speck has a private economy
+  * Trade
+  * Theft
+  * Salary
+
+= Personal agenda =
+  * Specks have stuff to do.
+  * Can miss appointments
+  * Have to choose between things where both can not be done (but are desirable).
+
+
+= Time of day (and seasons?) =
+  * Day / Night at least
+    - Should be indicated visually somehow
+
+
+= Infrastructure =
+  * Roads, for example
+    - Should give out some light during night-time
+    - Specks have some will to stick to roads
+    - Using roads can have some benefit (on movement speed, safety, etc.)
+  * Parks?
+  * Bad / Good areas
+
+
+= Rendering =
+  * Blobs with blur
+    - For very large (10k-100k specks), possibly realtime, simulations
+    - Should give the feeling of a far-off top down view of a large city
+
+  * Metablobs
+    - Beautiful
+    - Slows as balls
+    - Could be interesting for smaller simulations
