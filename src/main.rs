@@ -13,15 +13,15 @@ use rayon::prelude::*;
 // use stdweb;
 // use std::time::{SystemTime, UNIX_EPOCH};
 
-const SPECK_COUNT: i32 = 3000;
+const SPECK_COUNT: i32 = 15000;
 // const BACKGROUND_COLOR: Color = Color::new(50.0/ 256.0, 8.0/ 256.0, 8.0 / 256.0, 1.0);
 const BACKGROUND_COLOR: Color = Color::new(0.1, 0.1, 0.1, 1.);
-const SPECK_SIZE: f32 = 13.0;
+const SPECK_SIZE: f32 = 5.0;
 const HALF_CANVAS_SIZE: f32 = 200.;
-const NEIGHBOUR_DISTANCE: f32 = 2.0 * SPECK_SIZE;
-const MAX_SPEED: f32 = 2.0;
+const NEIGHBOUR_DISTANCE: f32 = 3.0 * SPECK_SIZE;
+const MAX_SPEED: f32 = 1.0;
 const MAX_AGE: f32 = 100.0;
-const UPDATE_CYCLE: i32 = 10;
+const UPDATE_CYCLE: i32 = 30;
 
 fn rand_color() -> Color {
   let r: f32 = gen_range(0.0, 1.0);
@@ -66,19 +66,11 @@ async fn main() {
 
   colors.shuffle();
   colors.truncate(2);
-  
 
   // let colors : Vec<Color>= colors_choices.choose_multiple(3).collect();
 
-  let mk_new_speck = |id: i32| {
-    rand_speck(
-      id,
-      colors.len(),
-      HALF_CANVAS_SIZE,
-      MAX_AGE,
-      UPDATE_CYCLE,
-    )
-  };
+  let mk_new_speck =
+    |id: i32| rand_speck(id, colors.len(), HALF_CANVAS_SIZE, MAX_AGE, UPDATE_CYCLE);
 
   let mut specks: Vec<Speck> = (0..SPECK_COUNT).map(|index| mk_new_speck(index)).collect();
 
@@ -89,12 +81,12 @@ async fn main() {
     let center_y: f32 = screen_height() / 2.0;
 
     let updates: Vec<_> = specks
-      .iter()
+      .par_iter()
       .map(|speck| {
         if speck.update_counter == 0 {
           let neighbours = get_neighbours(NEIGHBOUR_DISTANCE, speck, &specks);
           get_speck_update(speck, neighbours)
-        }else{
+        } else {
           None
         }
       })
@@ -115,13 +107,6 @@ async fn main() {
           speck.age = 0.0;
         }
 
-        draw_circle(
-          center_x + speck.pos.x,
-          center_y + speck.pos.y,
-          SPECK_SIZE * (speck.age / MAX_AGE),
-          colors[speck.color_index],
-        );
-
         match update {
           Some(update) => {
             apply_update(speck, update);
@@ -132,6 +117,19 @@ async fn main() {
         speck.pos += speck.dir * MAX_SPEED * speck.personality.stamina;
         constrain_to_canvas(speck);
       });
+
+    for i in 0..colors.len() {
+      for s in &specks {
+        if s.color_index == i {
+          draw_circle(
+            center_x + s.pos.x,
+            center_y + s.pos.y,
+            SPECK_SIZE * (s.age / MAX_AGE),
+            colors[s.color_index],
+          );
+        }
+      }
+    }
 
     next_frame().await
   }
