@@ -55,11 +55,11 @@ fn mb_make<A, F>(builder: F) -> Option<A>
 where
   F: Fn() -> A,
 {
-  if fifty_fifty(true, false) {
+  // if fifty_fifty(true, false) {
     Some(builder())
-  } else {
-    None
-  }
+  // } else {
+    // None
+  // }
 }
 
 fn rand_racism_target(my_color: usize, color_count: usize) -> usize {
