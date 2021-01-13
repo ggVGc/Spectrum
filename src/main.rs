@@ -13,7 +13,7 @@ use rayon::prelude::*;
 // use stdweb;
 // use std::time::{SystemTime, UNIX_EPOCH};
 
-const SPECK_COUNT: i32 = 25000;
+const SPECK_COUNT: i32 = 10000;
 // const BACKGROUND_COLOR: Color = Color::new(50.0/ 256.0, 8.0/ 256.0, 8.0 / 256.0, 1.0);
 const BACKGROUND_COLOR: Color = Color::new(0.1, 0.1, 0.1, 1.);
 // const BACKGROUND_COLOR: Color = Color::new(1., 1., 1., 1.);
@@ -24,7 +24,8 @@ const MAX_SPEED: f32 = 1.0;
 const MAX_AGE: f32 = 100.0;
 const UPDATE_CYCLE: i32 = 30;
 const AGE_STEP: f32 = 0.1;
-const ALPHA: f32 = 0.1;
+const ALPHA: f32 = 0.3;
+const COLOR_COUNT: usize = 2;
 
 fn rand_color() -> Color {
   let r: f32 = gen_range(0.0, 1.0);
@@ -68,7 +69,7 @@ async fn main() {
   ];
 
   colors.shuffle();
-  colors.truncate(2);
+  colors.truncate(COLOR_COUNT);
 
   // let colors : Vec<Color>= colors_choices.choose_multiple(3).collect();
 
@@ -121,9 +122,7 @@ async fn main() {
         constrain_to_canvas(speck);
       });
 
-    for i in 0..colors.len() {
       for s in &specks {
-        if s.color_index == i {
           draw_circle(
             center_x + s.pos.x,
             center_y + s.pos.y,
@@ -131,8 +130,6 @@ async fn main() {
             SPECK_SIZE,
             colors[s.color_index],
           );
-        }
-      }
     }
 
     next_frame().await

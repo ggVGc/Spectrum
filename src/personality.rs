@@ -34,7 +34,7 @@ pub fn rand_personality(my_color: usize) -> Personality {
     stamina: gen_range(0.1, 1.0),
     racism: Some(Racism {
       liked_color: my_color,
-      weight: gen_range(-0.5, 1.) * 1.,
+      weight: gen_range(0.1, 1.) * 1.,
     }),
     loner: mb_make(|| Loner {
       weight: gen_range(-1., 1.) * 0.5,
