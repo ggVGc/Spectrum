@@ -6,7 +6,9 @@ use macroquad::prelude::*;
 use crate::personality::*;
 use crate::rand::gen_range;
 use crate::speck::*;
-use std::time::{SystemTime, UNIX_EPOCH};
+// use chrono;
+// use stdweb;
+// use std::time::{SystemTime, UNIX_EPOCH};
 
 const SPECK_COUNT: i32 = 800;
 const BACKGROUND_COLOR: Color = Color::new(50.0/ 256.0, 8.0/ 256.0, 8.0 / 256.0, 1.0);
@@ -26,10 +28,7 @@ fn rand_color() -> Color {
 
 #[macroquad::main("Spectrum")]
 async fn main() {
-  let now = SystemTime::now()
-    .duration_since(UNIX_EPOCH)
-    .unwrap()
-    .as_secs();
+  let now = miniquad::date::now() as u64;
   rand::srand(now);
 
   let colors: Vec<Color> = vec![rand_color(), rand_color(), rand_color()];
