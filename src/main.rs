@@ -5,13 +5,15 @@ use macroquad::prelude::*;
 
 use crate::personality::*;
 use crate::rand::gen_range;
+use crate::rand::*;
 use crate::speck::*;
 // use chrono;
 // use stdweb;
 // use std::time::{SystemTime, UNIX_EPOCH};
 
-const SPECK_COUNT: i32 = 400;
-const BACKGROUND_COLOR: Color = Color::new(50.0/ 256.0, 8.0/ 256.0, 8.0 / 256.0, 1.0);
+const SPECK_COUNT: i32 = 700;
+// const BACKGROUND_COLOR: Color = Color::new(50.0/ 256.0, 8.0/ 256.0, 8.0 / 256.0, 1.0);
+const BACKGROUND_COLOR: Color = Color::new(0.1, 0.1, 0.1, 1.);
 const SPECK_SIZE: f32 = 10.0;
 const HALF_CANVAS_SIZE: f32 = SPECK_SIZE * 20.0;
 const NEIGHBOUR_DISTANCE: f32 = 2.0 * SPECK_SIZE;
@@ -23,7 +25,18 @@ fn rand_color() -> Color {
   let r: f32 = gen_range(0.0, 1.0);
   let g: f32 = gen_range(0.0, 1.0);
   let b: f32 = gen_range(0.0, 1.0);
+
+  println!("{}, {}, {}", r, g, b);
   Color::new(r, g, b, 1.0)
+}
+
+fn rgb_col(r: i32, g: i32, b: i32) -> Color {
+  Color::new(
+    (r as f32) / 256.0,
+    (g as f32) / 256.0,
+    (b as f32) / 256.0,
+    1.0,
+  )
 }
 
 #[macroquad::main("Spectrum")]
@@ -31,7 +44,29 @@ async fn main() {
   let now = miniquad::date::now() as u64;
   rand::srand(now);
 
-  let colors: Vec<Color> = vec![rand_color(), rand_color(), rand_color()];
+  // let chosen_cols: Vec<Color> = vec![
+  // rgb_col(9, 87, 186), // Light blue
+  // rgb_col(37, 191, 43),
+  // rgb_col(158, 49, 186),
+  // rgb_col(246, 184, 27)
+  // ];
+
+  let mut colors: Vec<Color> = vec![
+    Color::new(0.9312573, 0.44475517, 0.28618404, 1.0),
+    Color::new(0.8545363, 0.99431145, 0.72262, 1.0),
+    Color::new(0.4220315, 0.9615068, 0.9762378, 1.0),
+    Color::new(0.95924217, 0.8615281, 0.20789805, 1.0),
+    Color::new(0.23961169, 0.52690613, 0.8297602, 1.),
+    Color::new(0.24738885, 0.70956147, 0.044503536, 1.),
+    Color::new(0.8761864, 0.044863693, 0.12820734, 1.),
+    Color::new(0.0016417133, 0.95280874, 0.75869066, 1.),
+  ];
+
+  colors.shuffle();
+  colors.truncate(3);
+  
+
+  // let colors : Vec<Color>= colors_choices.choose_multiple(3).collect();
 
   let mk_new_speck = |id: i32| {
     rand_speck(
