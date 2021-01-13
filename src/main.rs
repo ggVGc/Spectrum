@@ -13,10 +13,11 @@ use rayon::prelude::*;
 // use stdweb;
 // use std::time::{SystemTime, UNIX_EPOCH};
 
-const SPECK_COUNT: i32 = 15000;
+const SPECK_COUNT: i32 = 8000;
 // const BACKGROUND_COLOR: Color = Color::new(50.0/ 256.0, 8.0/ 256.0, 8.0 / 256.0, 1.0);
 const BACKGROUND_COLOR: Color = Color::new(0.1, 0.1, 0.1, 1.);
-const SPECK_SIZE: f32 = 5.0;
+// const BACKGROUND_COLOR: Color = Color::new(1., 1., 1., 1.);
+const SPECK_SIZE: f32 = 6.0;
 const HALF_CANVAS_SIZE: f32 = 200.;
 const NEIGHBOUR_DISTANCE: f32 = 3.0 * SPECK_SIZE;
 const MAX_SPEED: f32 = 1.0;
@@ -53,15 +54,16 @@ async fn main() {
   // rgb_col(246, 184, 27)
   // ];
 
+  let alpha = 0.2;
   let mut colors: Vec<Color> = vec![
-    Color::new(0.9312573, 0.44475517, 0.28618404, 1.0),
-    Color::new(0.8545363, 0.99431145, 0.72262, 1.0),
-    Color::new(0.4220315, 0.9615068, 0.9762378, 1.0),
-    Color::new(0.95924217, 0.8615281, 0.20789805, 1.0),
-    Color::new(0.23961169, 0.52690613, 0.8297602, 1.),
-    Color::new(0.24738885, 0.70956147, 0.044503536, 1.),
-    Color::new(0.8761864, 0.044863693, 0.12820734, 1.),
-    Color::new(0.0016417133, 0.95280874, 0.75869066, 1.),
+    Color::new(0.9312573, 0.44475517, 0.28618404, alpha),
+    Color::new(0.8545363, 0.99431145, 0.72262, alpha),
+    Color::new(0.4220315, 0.9615068, 0.9762378, alpha),
+    Color::new(0.95924217, 0.8615281, 0.20789805, alpha),
+    Color::new(0.23961169, 0.52690613, 0.8297602, alpha),
+    Color::new(0.24738885, 0.70956147, 0.044503536, alpha),
+    Color::new(0.8761864, 0.044863693, 0.12820734, alpha),
+    Color::new(0.0016417133, 0.95280874, 0.75869066, alpha),
   ];
 
   colors.shuffle();
@@ -81,7 +83,7 @@ async fn main() {
     let center_y: f32 = screen_height() / 2.0;
 
     let updates: Vec<_> = specks
-      .par_iter()
+      .iter()
       .map(|speck| {
         if speck.update_counter == 0 {
           let neighbours = get_neighbours(NEIGHBOUR_DISTANCE, speck, &specks);
