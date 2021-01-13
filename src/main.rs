@@ -7,19 +7,21 @@ use crate::personality::*;
 use crate::rand::gen_range;
 use crate::rand::*;
 use crate::speck::*;
+use rayon::prelude::*;
+
 // use chrono;
 // use stdweb;
 // use std::time::{SystemTime, UNIX_EPOCH};
 
-const SPECK_COUNT: i32 = 700;
+const SPECK_COUNT: i32 = 12000;
 // const BACKGROUND_COLOR: Color = Color::new(50.0/ 256.0, 8.0/ 256.0, 8.0 / 256.0, 1.0);
 const BACKGROUND_COLOR: Color = Color::new(0.1, 0.1, 0.1, 1.);
-const SPECK_SIZE: f32 = 10.0;
-const HALF_CANVAS_SIZE: f32 = SPECK_SIZE * 20.0;
+const SPECK_SIZE: f32 = 11.0;
+const HALF_CANVAS_SIZE: f32 = 400.;
 const NEIGHBOUR_DISTANCE: f32 = 2.0 * SPECK_SIZE;
 const MAX_SPEED: f32 = 2.0;
 const MAX_AGE: f32 = 100.0;
-const DIR_UPDATE_CYCLE: i32 = 10;
+const UPDATE_CYCLE: i32 = 10;
 
 fn rand_color() -> Color {
   let r: f32 = gen_range(0.0, 1.0);
@@ -63,7 +65,7 @@ async fn main() {
   ];
 
   colors.shuffle();
-  colors.truncate(3);
+  colors.truncate(2);
   
 
   // let colors : Vec<Color>= colors_choices.choose_multiple(3).collect();
@@ -74,7 +76,7 @@ async fn main() {
       colors.len(),
       HALF_CANVAS_SIZE,
       MAX_AGE,
-      DIR_UPDATE_CYCLE,
+      UPDATE_CYCLE,
     )
   };
 
@@ -87,10 +89,14 @@ async fn main() {
     let center_y: f32 = screen_height() / 2.0;
 
     let updates: Vec<_> = specks
-      .iter()
+      .par_iter()
       .map(|speck| {
-        let neighbours = get_neighbours(NEIGHBOUR_DISTANCE, speck, &specks);
-        get_speck_update(speck, neighbours)
+        if speck.update_counter == 0 {
+          let neighbours = get_neighbours(NEIGHBOUR_DISTANCE, speck, &specks);
+          get_speck_update(speck, neighbours)
+        }else{
+          None
+        }
       })
       .collect();
 
@@ -99,10 +105,10 @@ async fn main() {
       .zip(updates.iter())
       .for_each(|(speck, update)| {
         speck.age += 0.01;
-        if speck.dir_update_counter > DIR_UPDATE_CYCLE {
-          speck.dir_update_counter = 0;
+        if speck.update_counter > UPDATE_CYCLE {
+          speck.update_counter = 0;
         } else {
-          speck.dir_update_counter += 1;
+          speck.update_counter += 1;
         }
         if speck.age >= MAX_AGE {
           *speck = mk_new_speck(speck.id);
@@ -142,7 +148,7 @@ fn get_neighbours<'a>(distance: f32, speck: &Speck, others: &'a [Speck]) -> Vec<
 }
 
 fn get_speck_update(speck: &Speck, neighbours: Vec<&Speck>) -> Option<SpeckUpdate> {
-  if speck.dir_update_counter == 0 && neighbours.len() > 0 {
+  if neighbours.len() > 0 {
     Some(SpeckUpdate::ChangeDir(dir_from_personality(
       speck.pos,
       &speck.personality,

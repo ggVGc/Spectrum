@@ -4,7 +4,7 @@ use macroquad::prelude::*;
 
 pub struct Speck {
   pub id: i32,
-  pub dir_update_counter: i32,
+  pub update_counter: i32,
   pub pos: Vec2,
   pub color_index: usize,
   pub dir: Vec2,
@@ -12,12 +12,12 @@ pub struct Speck {
   pub age: f32,
 }
 
-pub fn rand_speck(id: i32, color_count: usize, half_canvas_size: f32, max_age: f32, dir_update_cycle: i32) -> Speck {
+pub fn rand_speck(id: i32, color_count: usize, half_canvas_size: f32, max_age: f32, update_cycle: i32) -> Speck {
   let color_index = gen_range(0, color_count);
   Speck {
     id: id,
     color_index: color_index,
-    dir_update_counter: gen_range(0, dir_update_cycle),
+    update_counter: gen_range(0, update_cycle),
     pos: vec2(
       gen_range(-half_canvas_size, half_canvas_size),
       gen_range(-half_canvas_size, half_canvas_size),
