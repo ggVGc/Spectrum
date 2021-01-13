@@ -7,12 +7,13 @@ pub struct Personality {
 
   pub racism: Option<Racism>,
   pub loner: Option<Loner>,
-  pub stalker: Option<Stalker>,
+  pub random_walker: Option<RandomWalker>,
+  // pub stalker: Option<Stalker>,
 }
 
 pub struct Racism {
   pub weight: f32,
-  pub target: usize,
+  pub liked_color: usize,
 }
 
 pub struct Stalker {
@@ -20,26 +21,31 @@ pub struct Stalker {
   pub weight: f32,
 }
 
-pub struct Loner {
-  pub direction: f32,
+pub struct RandomWalker {
   pub weight: f32,
 }
 
-pub fn rand_personality(my_color: usize, color_count: usize) -> Personality {
+pub struct Loner {
+  pub weight: f32,
+}
+
+pub fn rand_personality(my_color: usize) -> Personality {
   Personality {
-    stamina: gen_range(0.4, 1.0),
-    racism: mb_make(|| Racism {
-      weight: gen_range(0.0, 1.0),
-      target: rand_racism_target(my_color, color_count),
+    stamina: gen_range(0.1, 1.0),
+    racism: Some(Racism {
+      liked_color: my_color,
+      weight: gen_range(-0.5, 1.) * 1.,
     }),
     loner: mb_make(|| Loner {
-      direction: fifty_fifty(1.0, -1.0),
-      weight: gen_range(0.0, 1.0),
+      weight: gen_range(-1., 1.) * 0.5,
     }),
-    stalker: mb_make(|| Stalker {
-      weight: gen_range(0.0, 1.0),
-      target: None,
+    random_walker: mb_make(|| RandomWalker {
+      weight: gen_range(0.01, 0.6),
     }),
+    // stalker: mb_make(|| Stalker {
+    //   weight: gen_range(0.0, 1.0),
+    //   target: None,
+    // }),
   }
 }
 
@@ -55,11 +61,11 @@ fn mb_make<A, F>(builder: F) -> Option<A>
 where
   F: Fn() -> A,
 {
-  // if fifty_fifty(true, false) {
+  if fifty_fifty(true, false) {
     Some(builder())
-  // } else {
-    // None
-  // }
+  } else {
+    None
+  }
 }
 
 fn rand_racism_target(my_color: usize, color_count: usize) -> usize {
@@ -78,6 +84,7 @@ pub fn dir_from_personality(pos: Vec2, personality: &Personality, neighbours: &[
       .loner
       .as_ref()
       .map_or(Vec2::zero(), |loner| loner_dir(pos, &loner, neighbours));
+  // + personality.random_walker.as_ref().map_or(Vec2::zero(), |walker| random_walker_dir(&walker));
 
   safe_normalize(dir)
 }
@@ -92,9 +99,9 @@ fn safe_normalize(vec: Vec2) -> Vec2 {
 
 fn racism_dir(pos: Vec2, racism: &Racism, neighbours: &[&Speck]) -> Vec2 {
   let mut dir = Vec2::zero();
-  for speck in neighbours {
-    if speck.color_index == racism.target {
-      dir -= speck.pos - pos;
+  for neighbour in neighbours {
+    if neighbour.color_index != racism.liked_color {
+      dir -= neighbour.pos - pos;
     }
   }
 
@@ -104,8 +111,13 @@ fn racism_dir(pos: Vec2, racism: &Racism, neighbours: &[&Speck]) -> Vec2 {
 fn loner_dir(pos: Vec2, loner: &Loner, neighbours: &[&Speck]) -> Vec2 {
   let mut dir = Vec2::zero();
   for speck in neighbours {
-    dir += (speck.pos - pos) * loner.direction;
+    dir += (speck.pos - pos);
   }
 
   safe_normalize(dir * loner.weight)
+}
+
+fn random_walker_dir(walker: &RandomWalker) -> Vec2 {
+  let dir = Vec2::new(gen_range(-1., 1.), gen_range(-1., 1.));
+  safe_normalize(dir * walker.weight)
 }

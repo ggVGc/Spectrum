@@ -13,16 +13,18 @@ use rayon::prelude::*;
 // use stdweb;
 // use std::time::{SystemTime, UNIX_EPOCH};
 
-const SPECK_COUNT: i32 = 8000;
+const SPECK_COUNT: i32 = 25000;
 // const BACKGROUND_COLOR: Color = Color::new(50.0/ 256.0, 8.0/ 256.0, 8.0 / 256.0, 1.0);
 const BACKGROUND_COLOR: Color = Color::new(0.1, 0.1, 0.1, 1.);
 // const BACKGROUND_COLOR: Color = Color::new(1., 1., 1., 1.);
-const SPECK_SIZE: f32 = 6.0;
+const SPECK_SIZE: f32 = 5.0;
 const HALF_CANVAS_SIZE: f32 = 200.;
 const NEIGHBOUR_DISTANCE: f32 = 3.0 * SPECK_SIZE;
 const MAX_SPEED: f32 = 1.0;
 const MAX_AGE: f32 = 100.0;
 const UPDATE_CYCLE: i32 = 30;
+const AGE_STEP: f32 = 0.1;
+const ALPHA: f32 = 0.1;
 
 fn rand_color() -> Color {
   let r: f32 = gen_range(0.0, 1.0);
@@ -54,16 +56,15 @@ async fn main() {
   // rgb_col(246, 184, 27)
   // ];
 
-  let alpha = 0.2;
   let mut colors: Vec<Color> = vec![
-    Color::new(0.9312573, 0.44475517, 0.28618404, alpha),
-    Color::new(0.8545363, 0.99431145, 0.72262, alpha),
-    Color::new(0.4220315, 0.9615068, 0.9762378, alpha),
-    Color::new(0.95924217, 0.8615281, 0.20789805, alpha),
-    Color::new(0.23961169, 0.52690613, 0.8297602, alpha),
-    Color::new(0.24738885, 0.70956147, 0.044503536, alpha),
-    Color::new(0.8761864, 0.044863693, 0.12820734, alpha),
-    Color::new(0.0016417133, 0.95280874, 0.75869066, alpha),
+    Color::new(0.9312573, 0.44475517, 0.28618404, ALPHA),
+    Color::new(0.8545363, 0.99431145, 0.72262, ALPHA),
+    Color::new(0.4220315, 0.9615068, 0.9762378, ALPHA),
+    Color::new(0.95924217, 0.8615281, 0.20789805, ALPHA),
+    Color::new(0.23961169, 0.52690613, 0.8297602, ALPHA),
+    Color::new(0.24738885, 0.70956147, 0.044503536, ALPHA),
+    Color::new(0.8761864, 0.044863693, 0.12820734, ALPHA),
+    Color::new(0.0016417133, 0.95280874, 0.75869066, ALPHA),
   ];
 
   colors.shuffle();
@@ -83,7 +84,7 @@ async fn main() {
     let center_y: f32 = screen_height() / 2.0;
 
     let updates: Vec<_> = specks
-      .iter()
+      .par_iter()
       .map(|speck| {
         if speck.update_counter == 0 {
           let neighbours = get_neighbours(NEIGHBOUR_DISTANCE, speck, &specks);
@@ -98,7 +99,7 @@ async fn main() {
       .iter_mut()
       .zip(updates.iter())
       .for_each(|(speck, update)| {
-        speck.age += 0.01;
+        speck.age += AGE_STEP;
         if speck.update_counter > UPDATE_CYCLE {
           speck.update_counter = 0;
         } else {
@@ -126,7 +127,8 @@ async fn main() {
           draw_circle(
             center_x + s.pos.x,
             center_y + s.pos.y,
-            SPECK_SIZE * (s.age / MAX_AGE),
+            // SPECK_SIZE * (s.age / MAX_AGE),
+            SPECK_SIZE,
             colors[s.color_index],
           );
         }

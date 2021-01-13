@@ -23,7 +23,7 @@ pub fn rand_speck(id: i32, color_count: usize, half_canvas_size: f32, max_age: f
       gen_range(-half_canvas_size, half_canvas_size),
     ),
     dir: vec2(gen_range(-1.0, 1.0), gen_range(-1.0, 1.0)).normalize(),
-    personality: rand_personality(color_index, color_count),
+    personality: rand_personality(color_index),
     age: gen_range(0.0, max_age),
   }
 }
