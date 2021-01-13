@@ -13,11 +13,11 @@ use rayon::prelude::*;
 // use stdweb;
 // use std::time::{SystemTime, UNIX_EPOCH};
 
-const SPECK_COUNT: i32 = 7000;
+const SPECK_COUNT: i32 = 3000;
 // const BACKGROUND_COLOR: Color = Color::new(50.0/ 256.0, 8.0/ 256.0, 8.0 / 256.0, 1.0);
 const BACKGROUND_COLOR: Color = Color::new(0.1, 0.1, 0.1, 1.);
-const SPECK_SIZE: f32 = 11.0;
-const HALF_CANVAS_SIZE: f32 = 300.;
+const SPECK_SIZE: f32 = 13.0;
+const HALF_CANVAS_SIZE: f32 = 200.;
 const NEIGHBOUR_DISTANCE: f32 = 2.0 * SPECK_SIZE;
 const MAX_SPEED: f32 = 2.0;
 const MAX_AGE: f32 = 100.0;
