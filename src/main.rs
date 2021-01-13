@@ -10,7 +10,7 @@ use crate::speck::*;
 // use stdweb;
 // use std::time::{SystemTime, UNIX_EPOCH};
 
-const SPECK_COUNT: i32 = 800;
+const SPECK_COUNT: i32 = 400;
 const BACKGROUND_COLOR: Color = Color::new(50.0/ 256.0, 8.0/ 256.0, 8.0 / 256.0, 1.0);
 const SPECK_SIZE: f32 = 10.0;
 const HALF_CANVAS_SIZE: f32 = SPECK_SIZE * 20.0;
