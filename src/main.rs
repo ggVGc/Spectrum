@@ -7,7 +7,7 @@ use crate::personality::*;
 use crate::rand::gen_range;
 use crate::rand::*;
 use crate::speck::*;
-use rayon::prelude::*;
+// use rayon::prelude::*;
 
 // use chrono;
 // use stdweb;
@@ -85,7 +85,7 @@ async fn main() {
     let center_y: f32 = screen_height() / 2.0;
 
     let updates: Vec<_> = specks
-      .par_iter()
+      .iter()
       .map(|speck| {
         if speck.update_counter == 0 {
           let neighbours = get_neighbours(NEIGHBOUR_DISTANCE, speck, &specks);
