@@ -13,18 +13,18 @@ use crate::speck::*;
 // use stdweb;
 // use std::time::{SystemTime, UNIX_EPOCH};
 
-const SPECK_COUNT: i32 = 10000;
+const SPECK_COUNT: i32 = 6000;
 // const BACKGROUND_COLOR: Color = Color::new(50.0/ 256.0, 8.0/ 256.0, 8.0 / 256.0, 1.0);
 const BACKGROUND_COLOR: Color = Color::new(0.1, 0.1, 0.1, 1.);
 // const BACKGROUND_COLOR: Color = Color::new(1., 1., 1., 1.);
-const SPECK_SIZE: f32 = 5.0;
+const SPECK_SIZE: f32 = 5.5;
 const HALF_CANVAS_SIZE: f32 = 200.;
 const NEIGHBOUR_DISTANCE: f32 = 3.0 * SPECK_SIZE;
 const MAX_SPEED: f32 = 1.0;
 const MAX_AGE: f32 = 100.0;
 const UPDATE_CYCLE: i32 = 50;
 const AGE_STEP: f32 = 0.1;
-const ALPHA: f32 = 0.3;
+const ALPHA: f32 = 0.4;
 const COLOR_COUNT: usize = 2;
 
 fn rand_color() -> Color {
