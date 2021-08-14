@@ -72,3 +72,10 @@
     - Beautiful
     - Slows as balls
     - Could be interesting for smaller simulations
+  
+
+  * Heatmap grid
+    - Instead of rendering actual entities, add heat values to pixels based on
+      their location.
+    - Allow zooming into sub-grids for more detailed view.
+    
